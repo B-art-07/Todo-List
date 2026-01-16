@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo App</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="todo-box">
+    <h2>Todo App</h2>
+
+    <div class="input-area">
+      <input type="text" id="taskInput" placeholder="Add your new todo">
+      <button id="addBtn"><i class="fa fa-plus"></i></button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+    <div class="footer">
+      <span>You have <b id="count">0</b> pending tasks</span>
+      <button id="clearBtn">Clear All</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
