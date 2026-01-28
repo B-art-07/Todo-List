@@ -1,30 +1,63 @@
 const taskInput = document.getElementById("taskInput");
 const addBtn = document.getElementById("addBtn");
 const taskList = document.getElementById("taskList");
-const count = document.getElementById("count");
-const clearBtn = document.getElementById("clearBtn");
+const counter = document.getElementById("counter");
 
-function updateCount() {
-  count.textContent = taskList.children.length;
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-addBtn.onclick = () => {
+function updateCounter() {
+  counter.textContent = `${tasks.length} Tasks`;
+}
+
+function renderTasks() {
+  taskList.innerHTML = "";
+
+  tasks.forEach((task, index) => {
+    const li = document.createElement("li");
+    if (task.done) li.classList.add("completed");
+
+    const span = document.createElement("span");
+    span.className = "task-text";
+    span.textContent = task.text;
+    span.onclick = () => {
+      tasks[index].done = !tasks[index].done;
+      saveTasks();
+      renderTasks();
+    };
+
+    const del = document.createElement("button");
+    del.className = "delete";
+    del.innerHTML = "✖";
+    del.onclick = () => {
+      tasks.splice(index, 1);
+      saveTasks();
+      renderTasks();
+    };
+
+    li.appendChild(span);
+    li.appendChild(del);
+    taskList.appendChild(li);
+  });
+
+  updateCounter();
+}
+
+function addTask() {
   if (taskInput.value.trim() === "") return;
 
-  const li = document.createElement("li");
-  li.innerHTML = `<span>${taskInput.value}</span><button><i class="fa fa-trash"></i></button>`;
-
-  li.querySelector("button").onclick = () => {
-    li.remove();
-    updateCount();
-  };
-
-  taskList.appendChild(li);
+  tasks.push({ text: taskInput.value, done: false });
   taskInput.value = "";
-  updateCount();
-};
+  saveTasks();
+  renderTasks();
+}
 
-clearBtn.onclick = () => {
-  taskList.innerHTML = "";
-  updateCount();
-};
+addBtn.addEventListener("click", addTask);
+taskInput.addEventListener("keypress", e => {
+  if (e.key === "Enter") addTask();
+});
+
+renderTasks();
